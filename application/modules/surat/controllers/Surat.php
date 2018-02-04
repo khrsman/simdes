@@ -122,7 +122,11 @@ class Surat extends CI_Controller
 		$this->load->view('v_surat_data');
 	}
 
-
+	function jabatan_pamong(){
+		$id = $this->input->get('id');
+		$jabatan = $this->db->select('id_jabatan')->where('id_pamong',$id)->get('pamong')->result_array()[0];
+		echo json_encode($jabatan);
+	}
 
 
 	function buat_surat_form()
@@ -192,9 +196,9 @@ class Surat extends CI_Controller
 		$data_insert['id_jabatan'] = $data_pamong['id_jabatan'];
 
     //proses insert dan generate suratnya
-	  $insert = $this->M_surat->insert($data_insert);
-    if($insert)
-		$this->generate_surat($nama_file_surat, $des, $pmg, $srt);
+		$generate = $this->generate_surat($nama_file_surat, $des, $pmg, $srt);
+		$insert = $this->M_surat->insert($data_insert);
+
 	}
 
 	function generate_surat($nama_file_surat, $des, $pmg, $srt)
@@ -209,7 +213,9 @@ class Surat extends CI_Controller
 		$img[] = array(
 			'logo' => realpath(APPPATH . '../img') . '/logo_kota.png'
 		);
+
 		$TBS->LoadTemplate($file_template, OPENTBS_ALREADY_UTF8);
+
 		$TBS->MergeBlock('des', $des);
 		$TBS->MergeBlock('pmg', $pmg);
 		$TBS->MergeBlock('srt', $srt);
@@ -220,6 +226,7 @@ class Surat extends CI_Controller
 		$output_pdf_name = '*.pdf';
 		$output_pdf = $output_dir . '*.pdf';
 		$output_doc = $output_dir . $output_doc_name;
+
 		$TBS->Show(OPENTBS_FILE, $output_doc); // Also merges all [onshow] automatic fields.
 
 		//  $x = shell_exec("libreoffice --headless --convert-to pdf $output_doc --outdir $output_dir");
@@ -279,8 +286,6 @@ class Surat extends CI_Controller
     ));
 
     $this->generate_surat($nama_file_surat, $des, $pmg, $srt);
-
-
   }
 
 }

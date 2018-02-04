@@ -63,7 +63,7 @@
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="small-box bg-teal">
                     <div class="inner">
-                      <h3>150</h3>
+                      <h3><?php echo $jumlah_warga ?></h3>
                       <p>Jumlah Penduduk</p>
                     </div>
                     <div class="icon">
@@ -75,7 +75,7 @@
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="small-box bg-aqua">
                     <div class="inner">
-                      <h3>350</h3>
+                      <h3><h3><?php echo $jumlah_surat ?></h3></h3>
                       <p>Jumlah Surat</p>
                     </div>
                     <div class="icon">

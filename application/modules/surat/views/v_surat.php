@@ -35,7 +35,9 @@ $(document).ready(function(){
 })
 
 $("#page_tambah").click(function(){
-  // editor_page();
+  $.get("<?php echo base_url('surat/buat_surat_page') ?>").done(function(data){
+         $("#page_content").html(data);
+  })
 })
 
 $("#page_data").click(function(){

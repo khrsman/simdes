@@ -190,25 +190,20 @@
 
 <script type="text/javascript">
     $(".btn_back").click(function() {
-        // $.get("<?php echo base_url('surat') ?>").done(function(data) {
-        //   $("#myModal").modal('hide');
-        //      $("#page_content").html(data);
-        //      $('body').removeClass('modal-open');
-        //      $('.modal-backdrop').remove();
-        // })
         location.reload();
     })
- //    $("#download_link").click(function() {
- //        $.get("<?php echo base_url('surat/jenis_surat') ?>").done(function(data) {
- //          $("#myModal").modal('hide');
- //             $("#page_content").html(data);
- //             $('body').removeClass('modal-open');
- // $('.modal-backdrop').remove();
- //        })
- //    })
+
+    $("#id_pamong").change(function(){
+            id = $(this).val();
+            $.get("<?php echo base_url('surat/jabatan_pamong') ?>",{id: id}).done(function(data) {
+              arr = JSON.parse(data);
+              $("#id_jabatan").val(arr.id_jabatan);
+
+
+            })
+    })
 
     $("#buat_surat").click(function() {
-
       if(!validate()){
         return;
       console.log('gagal validasi');
@@ -219,7 +214,16 @@
         data_pamong = $('.form_pamong').serialize();
 
          $("#myModal").modal();
-        $.post("<?php echo base_url('surat/proses_buat_surat') ?>",{data_surat: data_surat, data_warga: data_warga, data_persyaratan:data_persyaratan, data_pamong:data_pamong}).done(function(data) {
+        request = $.post("<?php echo base_url('surat/proses_buat_surat') ?>",{data_surat: data_surat, data_warga: data_warga, data_persyaratan:data_persyaratan, data_pamong:data_pamong});
+        request.done(function(data) {
+          try {
+       JSON.parse(data);
+               } catch (e) {              
+                 $("#loading_process").hide();
+                 $("#keterangan_proses").text("Surat belum tersedia");
+                   return false;
+               }
+
           arr = JSON.parse(data);
 
             $("a#download_link").attr("href", arr.link_doc);
@@ -227,17 +231,12 @@
             $("#loading_process").hide();
             $("#keterangan_proses").text("Surat berhasil dibuat");
 
-        })
+        });
     })
-    // eventSelect = $('.select2').select2({
-    //     placeholder: "Pilih",
-    //     dropdownCss: { 'max-width': '500px' }
-    //
-    // });
 
     eventSelect = $('#input_warga').select2({
         placeholder: "masukan nik atau nama",
-          dropdownCss: { 'max-width': '500px' },
+        dropdownCss: { 'max-width': '500px' },
         ajax: {
             url: "<?php echo base_url('warga/get_warga_select2')?>",
             data: function(params) {
@@ -255,7 +254,6 @@
         });
         data.done(function(data) {
             var obj = JSON.parse(data);
-
             arr = JSON.parse(data);
             $.each(arr, function(key, value) {
                 var id_val = key;
